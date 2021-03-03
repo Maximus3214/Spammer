@@ -1,2 +1,2 @@
 # Spammer
-A bot that spam types a selected message
+A bot that spams someone with a selected message
