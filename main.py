@@ -22,6 +22,12 @@ main = Frame(win)
 sett = Frame(win)
 hel = Frame(win)
 
+settbtnimg = PhotoImage(file=r"settbtn.png")
+settbtnimgs = settbtnimg.subsample(25, 25)
+
+helpbtnimg = PhotoImage(file=r"helpbtn.png")
+helpbtnimgs = helpbtnimg.subsample(15, 15)
+
 for frame in (main, sett, hel):
     frame.grid(row=0, column=0, sticky="nsew")
 
@@ -35,11 +41,16 @@ main_title = Label(main, text="Main", bg="dodger blue")
 main_title.pack(fill="x")
 
 # options button
-optionsbtn = Button(main, text="Settings", command=lambda: show_frame(sett))
-optionsbtn.place(relx=0.06, rely=0.16, anchor="center")
+optionsbtn = Button(main, image=settbtnimgs, command=lambda: show_frame(sett))
+optionsbtn.place(relx=0, rely=0.1)
 
-howtobtn = Button(main, text="Help", width=7, command=lambda: show_frame(hel))
-howtobtn.place(relx=0.93, rely=0.16, anchor="center")
+howtobtn = Button(main, image=helpbtnimgs, width=7, command=lambda: show_frame(hel))
+howtobtn.place(relx=0.949, rely=0.1, width=23, height=23)
+
+var2 = StringVar()
+var2.set("Delay")
+slidert = Entry(main, textvar=var2)
+slidert.place(relx=0.5, rely=0.22, anchor="center")
 
 # Number of spams
 value = DoubleVar()
@@ -48,6 +59,7 @@ slider.place(relx=0.5, rely=0.35, anchor="center", width=285)
 
 # Spam text
 var = StringVar()
+var.set("Message")
 textbox = Entry(main, textvar=var)
 textbox.place(relx=0.33, rely=0.6, anchor="center", height=25)
 
@@ -56,35 +68,69 @@ warninglbl.place(relx=0.5, rely=0.8, anchor="center")
 
 
 def spam():
-    time.sleep(5)
-    selection = value.get()
-    spamno = 0
-    while spamno < selection:
-        if var.get() == "BEE":
-            f = open("supersecret.txt", 'r')
-            win.update()
-            for word in f:
-                var.set(f)
-                pyautogui.typewrite(word)
-        else:
-            if chkValue.get() == 1 and chkValue1.get() == 1:
-                word = textbox.get()
-                pyautogui.typewrite("/" + word)
-                pyautogui.press("enter")
-                spamno = spamno + 1
-            elif chkValue.get() == 1:
-                word = textbox.get()
-                pyautogui.typewrite(word)
-                pyautogui.press("enter")
-                spamno = spamno+1
-            elif chkValue.get() != 1 and chkValue1.get() == 1:
-                word = textbox.get()
-                pyautogui.typewrite("/" + word)
-                spamno = spamno + 1
+    global sleep
+    slidert.get()
+    if isinstance(slidert, str):
+        slidert.delete(0, END)
+    else:
+        sleep = False
+        time.sleep(5)
+        selection = value.get()
+        spamno = 0
+        stme = int(var2.get())
+        if stme > 1:
+            sleep = True
+        while spamno < selection:
+            if sleep:
+                sleep = False
             else:
-                word = textbox.get()
-                pyautogui.typewrite(word)
-                spamno = spamno+1
+                if chkValue.get() == 1 and chkValue1.get() == 1:
+                    word = textbox.get()
+                    pyautogui.typewrite("/" + word)
+                    pyautogui.press("enter")
+                    spamno = spamno + 1
+                    time.sleep(stme)
+                elif chkValue.get() == 1:
+                    word = textbox.get()
+                    pyautogui.typewrite(word)
+                    pyautogui.press("enter")
+                    spamno = spamno+1
+                    time.sleep(stme)
+                elif chkValue.get() != 1 and chkValue1.get() == 1:
+                    word = textbox.get()
+                    pyautogui.typewrite("/" + word)
+                    spamno = spamno + 1
+                    time.sleep(stme)
+                else:
+                    word = textbox.get()
+                    pyautogui.typewrite(word)
+                    spamno = spamno+1
+                    time.sleep(stme)
+            if var.get() == "BEE":
+                f = open("supersecret.txt", 'r')
+                win.update()
+                for word in f:
+                    var.set(f)
+                    pyautogui.typewrite(word)
+            else:
+                if chkValue.get() == 1 and chkValue1.get() == 1:
+                    word = textbox.get()
+                    pyautogui.typewrite("/" + word)
+                    pyautogui.press("enter")
+                    spamno = spamno + 1
+                elif chkValue.get() == 1:
+                    word = textbox.get()
+                    pyautogui.typewrite(word)
+                    pyautogui.press("enter")
+                    spamno = spamno+1
+                elif chkValue.get() != 1 and chkValue1.get() == 1:
+                    word = textbox.get()
+                    pyautogui.typewrite("/" + word)
+                    spamno = spamno + 1
+                else:
+                    word = textbox.get()
+                    pyautogui.typewrite(word)
+                    spamno = spamno+1
 
 
 # Spam button
@@ -106,6 +152,9 @@ ntrcb.place(relx=0, rely=0.25)
 chkValue1 = IntVar()
 rblxcb = Checkbutton(sett, text="Roblox mode (types '/' before message)", variable=chkValue1)
 rblxcb.place(relx=0, rely=0.35)
+
+minlbl = Label(sett, text="Mins Between Messages")
+minlbl.place(relx=0, rely=0.45)
 
 mslbl = Label(sett, text="More coming soon!")
 mslbl.place(relx=0.5, rely=0.7, anchor="center")
